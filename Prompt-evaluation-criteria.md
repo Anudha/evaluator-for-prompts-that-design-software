@@ -5,25 +5,33 @@ These evaluations should be run in order. Each one is a question with a pass/fai
 **Category 1 — Feasibility (must pass before writing code)**
 
 1.1 Real-world target compatibility
+
 For each external system, API, or website the software interacts with: does the proposed approach actually work against how that system behaves in production?
 Test: name the approach, name the target, state one known fact about the target that confirms or kills the approach.
 Fail example: "scrape career pages with requests.get" + "Stripe uses React-rendered job listings"
+
 1.2 Runtime environment consistency
+
 Are the tools used across components consistent with the runtime already established?
 Test: list every tool/library used per component. If the system already has Tool X running, flag any component that reimplements Tool X's job with something inferior.
 Fail example: CDP browser already running for form filling, static HTTP fetcher used for crawling the same sites
+
 1.3 Code generation timing
+
 If any code generates other code: are all values substituted at the right time? Separate build-time constants from runtime variables explicitly.
 Test: for every variable appearing in a generated file, state when it gets its value — build time or runtime. Any runtime variable inside a build-time f-string is a bug.
 1.4 Platform and version constraints
 Are there known version-specific behaviors of the target platform that affect the implementation?
 Test: for each external dependency, name its version or version range and any known breaking changes relevant to the approach.
 Fail example: Chrome 111+ requires --remote-allow-origins for CDP WebSocket connections
+
 1.5 Network failure isolation
+
 For every external HTTP call: what happens to the rest of the system if it fails, hangs, or returns garbage?
 Test: trace each network call to its failure mode. A crash in one company's crawler should not kill the agent thread processing all other companies.
 
 **Category 2 — Architecture (catch structural problems early)**
+
 2.1 Single responsibility per component
 Does each module do exactly one thing? Flag any module that both discovers data and acts on it, or both parses and stores.
 2.2 State ownership
@@ -36,11 +44,15 @@ Can you trace a single unit of data (e.g. one job URL) from entry point to final
 If component B depends on component A's output: what does B do when A returns nothing, returns malformed data, or throws? Specify this explicitly for every dependency edge.
 
 **Category 3 — External system assumptions**
+
 3.1 Authentication requirements
+
 Does any target site require login to reach the relevant content? If yes, the approach must account for it or explicitly exclude those targets.
 3.2 Anti-automation measures
 Does any target site use CAPTCHA, bot detection, rate limiting, or JavaScript challenges? State what the system does in each case — skip, pause, ask human — and confirm no bypass is attempted.
+
 3.3 DOM and rendering assumptions
+
 For any web scraping or automation: is the target content available in static HTML, or does it require JavaScript execution to render? Name which for each target.
 This is the question that would have caught the crawler problem before any code was written.
 3.4 Schema stability

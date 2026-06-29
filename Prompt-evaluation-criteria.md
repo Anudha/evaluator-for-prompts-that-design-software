@@ -1,7 +1,9 @@
 ##Software Generation Prompt Evaluation Framework##
+
 These evaluations should be run in order. Each one is a question with a pass/fail test. A prompt that fails any Category 1 evaluation should be revised before code is written.
 
 ##Category 1 — Feasibility (must pass before writing code)##
+
 1.1 Real-world target compatibility
 For each external system, API, or website the software interacts with: does the proposed approach actually work against how that system behaves in production?
 Test: name the approach, name the target, state one known fact about the target that confirms or kills the approach.

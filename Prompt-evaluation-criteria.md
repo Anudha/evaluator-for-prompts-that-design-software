@@ -1,8 +1,8 @@
-##Software Generation Prompt Evaluation Framework##
+**Software Generation Prompt Evaluation Framework**
 
 These evaluations should be run in order. Each one is a question with a pass/fail test. A prompt that fails any Category 1 evaluation should be revised before code is written.
 
-##Category 1 — Feasibility (must pass before writing code)##
+**Category 1 — Feasibility (must pass before writing code)**
 
 1.1 Real-world target compatibility
 For each external system, API, or website the software interacts with: does the proposed approach actually work against how that system behaves in production?
@@ -23,7 +23,7 @@ Fail example: Chrome 111+ requires --remote-allow-origins for CDP WebSocket conn
 For every external HTTP call: what happens to the rest of the system if it fails, hangs, or returns garbage?
 Test: trace each network call to its failure mode. A crash in one company's crawler should not kill the agent thread processing all other companies.
 
-##Category 2 — Architecture (catch structural problems early)##
+**Category 2 — Architecture (catch structural problems early)**
 2.1 Single responsibility per component
 Does each module do exactly one thing? Flag any module that both discovers data and acts on it, or both parses and stores.
 2.2 State ownership
@@ -35,7 +35,7 @@ Can you trace a single unit of data (e.g. one job URL) from entry point to final
 2.5 Failure propagation
 If component B depends on component A's output: what does B do when A returns nothing, returns malformed data, or throws? Specify this explicitly for every dependency edge.
 
-##Category 3 — External system assumptions##
+**Category 3 — External system assumptions**
 3.1 Authentication requirements
 Does any target site require login to reach the relevant content? If yes, the approach must account for it or explicitly exclude those targets.
 3.2 Anti-automation measures
@@ -48,7 +48,7 @@ Does the approach depend on a specific DOM structure, API response shape, or URL
 3.5 Terms of service
 Does the approach comply with each target site's terms? Flag scraping, automation, or data collection that may conflict.
 
-##Category 4 — UI and polling behavior##
+**Category 4 — UI and polling behavior**
 4.1 Poll side effects
 For any polling loop: does the handler modify UI state beyond updating content? Switching active tabs, scrolling, or stealing focus on every poll cycle will make the UI unusable.
 Test: list every DOM mutation the poll handler performs. Any mutation that affects user navigation is a bug.
@@ -57,7 +57,7 @@ For any data that arrives asynchronously: distinguish between "show this for the
 4.3 User control preservation
 Can the user interrupt, navigate away from, or override any agent action at any time? Flag any loop or state machine that does not yield to user input.
 
-##Category 5 — LLM integration##
+**Category 5 — LLM integration**
 5.1 LLM output scope
 What is the LLM allowed to return — structured JSON, natural language, executable code? State this explicitly. Any prompt that could return executable code that gets eval'd is a security boundary violation.
 5.2 Validation before action
@@ -70,7 +70,7 @@ List every field the LLM is not permitted to generate answers for. Confirm each 
 5.5 Fallback on LLM failure
 For every LLM call: what happens on timeout, invalid JSON, or empty response? Is there a retry with a repair prompt, a fallback to human review, or a crash? State which.
 
-##Category 6 — Privacy and data handling##
+**Category 6 — Privacy and data handling**
 6.1 Data boundary
 Name every piece of user data (resume, profile, email, phone). For each: confirm it never leaves the local machine except through explicitly approved submission actions.
 6.2 Log content
@@ -79,4 +79,4 @@ What goes into log files? Confirm no credential, resume text, or PII is written 
 Screenshots capture whatever is on screen. Confirm the review flow makes clear to the user what is being captured and stored.
 
 
-##The goal is that by the time code generation starts, every evaluation passes and the implementer has no architectural decisions left to make, only implementation decisions.##
+**The goal is that by the time code generation starts, every evaluation passes and the implementer has no architectural decisions left to make, only implementation decisions.**
